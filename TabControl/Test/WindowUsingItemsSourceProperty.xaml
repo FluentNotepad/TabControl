@@ -1,0 +1,136 @@
+﻿<Window x:Class="Test.WindowUsingItemsSourceProperty"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:r="clr-namespace:Wpf.Controls;assembly=Wpf.TabControl"
+    xmlns:Test="clr-namespace:Test"
+    xmlns:System="clr-namespace:System;assembly=mscorlib"
+    Title="WindowUsingItemsSourceProperty" Height="600" Width="800"
+    x:Name="root">
+	
+	<Window.Resources>
+		<!-- Enum used for the TabStripPlacement Listbox-->
+		<ObjectDataProvider x:Key="enum" MethodName="GetValues" ObjectType="{x:Type System:Enum}">
+			<ObjectDataProvider.MethodParameters>
+				<x:Type TypeName="Dock"/>
+			</ObjectDataProvider.MethodParameters>
+		</ObjectDataProvider>
+	</Window.Resources>
+	
+	<DockPanel>
+        <GroupBox DockPanel.Dock="Bottom" Header="ItemsSource" Margin="5">
+            <StackPanel>
+                <RadioButton Margin="2" Content="Fixed size array" Checked="FixedRadioButton_Checked"/>
+                <RadioButton Margin="2" Content="Observable collection" IsChecked="True" Checked="DynamicRadioButton_Checked"/>
+            </StackPanel>
+        </GroupBox>
+        
+        <Grid>
+			<Grid.RowDefinitions>
+				<RowDefinition Height="*"/>
+				<RowDefinition Height="Auto" />
+			</Grid.RowDefinitions>
+			
+            <!--TabControl with ItemsSource bound to an ObservableCollection-->
+            <r:TabControl  Margin="10" x:Name="tabControl" TabStripPlacement="{Binding ElementName=listBox, Path=SelectedItem}"
+				TabItemMaxWidth="300" TabItemMinHeight="30" TabItemMaxHeight="50" VerticalContentAlignment="Center"
+				ItemsSource="{Binding DynamicObjects, ElementName=root}">
+
+				<!-- Properties for setting the background for the tab items depending on their current state -->
+				<!-- These brushes give the contro an IE7 type look-->
+				<r:TabControl.TabItemNormalBackground>
+					<LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+						<GradientStop Color="#FFFCFDFD" Offset="0"/>
+						<GradientStop Color="#FFE5EAF5" Offset="0.3"/>
+						<GradientStop Color="#FFCFD7EB" Offset="0.3"/>
+						<GradientStop Color="#FFE0E5F5" Offset="0.7"/>
+						<GradientStop Color="#FFECEEFC" Offset="1"/>
+					</LinearGradientBrush>
+				</r:TabControl.TabItemNormalBackground>
+
+				<r:TabControl.TabItemSelectedBackground>
+					<LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+						<GradientStop Color="#FFFBFDFE" Offset="0"/>
+						<GradientStop Color="#FFEAF6FB" Offset="0.3"/>
+						<GradientStop Color="#FFCEE7FA" Offset="0.3"/>
+						<GradientStop Color="#FFB9D1FA" Offset="1"/>
+					</LinearGradientBrush>
+				</r:TabControl.TabItemSelectedBackground>
+
+				<r:TabControl.TabItemMouseOverBackground>
+					<LinearGradientBrush EndPoint="0,1" StartPoint="0,0">
+						<GradientStop Color="#FFFCFDFD" Offset="0"/>
+						<GradientStop Color="#FFC6DDF7" Offset="0.3"/>
+						<GradientStop Color="#FF99C6EE" Offset="0.3"/>
+						<GradientStop Color="#FFB6D6F1" Offset="0.7"/>
+						<GradientStop Color="#FFD9E9F9" Offset="1"/>
+					</LinearGradientBrush>
+				</r:TabControl.TabItemMouseOverBackground>
+				
+				<!-- Set the TabItem Header by using the ItemTemplate property to bind to the Header property of the MyObject instance-->
+                <r:TabControl.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Header}"/>
+                    </DataTemplate>
+                </r:TabControl.ItemTemplate>
+
+                <!-- A DataTemplate for the TabObject type, the content of the TabItems-->
+                <r:TabControl.ContentTemplate>
+                    <DataTemplate >
+                        <TextBlock Text="{Binding Value}" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="32" />
+                    </DataTemplate>
+                </r:TabControl.ContentTemplate>
+            </r:TabControl>
+
+			<!--Settings -->
+			<Grid Grid.Row="1" Margin="20,5,20,5">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="*"/>
+				</Grid.ColumnDefinitions>
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto"/>
+					<RowDefinition Height="*"/>
+				</Grid.RowDefinitions>
+
+				<Border Background="WhiteSmoke" BorderBrush="#FFCCCCCC" BorderThickness="1,0,1,1" Grid.ColumnSpan="3" Grid.RowSpan="2"/>
+				<TextBlock Margin="2" Text="Dependency Properties" FontWeight="Bold" TextDecorations="Underline" Grid.ColumnSpan="2"/>
+				
+				<DockPanel Grid.Column="0" Grid.Row="1" LastChildFill="False" VerticalAlignment="Center">
+					<CheckBox Margin="2" Content="AllowAddNew" VerticalAlignment="Center" IsChecked="{Binding ElementName=tabControl, Path=AllowAddNew, Mode=TwoWay}" DockPanel.Dock="Top" ToolTip="Allows the Addition of new Tabs using the 'Add New' Button from the UI"/>
+					<CheckBox Margin="2" Content="AllowDelete" VerticalAlignment="Center" IsChecked="{Binding ElementName=tabControl, Path=AllowDelete, Mode=TwoWay}"  DockPanel.Dock="Top"  ToolTip="Allows the deletion of Tabs using the Close Button displayed on the Selected tab"/>
+					<CheckBox Margin="2" Content="SelectNewTabOnCreate" VerticalAlignment="Center" IsChecked="{Binding ElementName=tabControl, Path=SelectNewTabOnCreate}"  DockPanel.Dock="Top" ToolTip="Selects the New Tab added using the 'Add New' Button"/>
+					<CheckBox Margin="2" Content="AddNewTabToEnd" VerticalAlignment="Center" IsChecked="{Binding ElementName=tabControl, Path=AddNewTabToEnd}"  DockPanel.Dock="Top" ToolTip="if true, adds new tabs to the end, otherwise inserts the new tab after the current selection"/>
+				</DockPanel>
+
+				<Grid Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" Margin="50,0,0,0">
+					<Grid.RowDefinitions>
+						<RowDefinition />
+						<RowDefinition />
+						<RowDefinition />
+						<RowDefinition />
+					</Grid.RowDefinitions>
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition/>
+						<ColumnDefinition/>
+					</Grid.ColumnDefinitions>
+					<TextBox Margin="2,0,2,0" Width="50" Grid.Row="0" Grid.Column="0" Text="{Binding ElementName=tabControl, Path=TabItemMaxWidth, Mode=TwoWay}" GotFocus="TextBox_GotFocus"/>
+					<TextBlock Margin="2,0,2,0"  Text="HeaderMaxWidth" DockPanel.Dock="Top" Grid.Row="0" Grid.Column="1" VerticalAlignment="Center" ToolTip="Set the Maximum width for a Header"/>
+					<TextBox Margin="2,0,2,0" Width="50" Grid.Row="1" Grid.Column="0" Text="{Binding ElementName=tabControl, Path=TabItemMinWidth, Mode=TwoWay}" GotFocus="TextBox_GotFocus"/>
+					<TextBlock Margin="2,0,2,0"  Text="HeaderMinWidth" DockPanel.Dock="Top" Grid.Row="1" Grid.Column="1" VerticalAlignment="Center" ToolTip="Set the Minimum width for a Header"/>
+
+					<TextBox Margin="2,0,2,0" Width="50" Grid.Row="2" Grid.Column="0" Text="{Binding ElementName=tabControl, Path=TabItemMaxHeight, Mode=TwoWay}" GotFocus="TextBox_GotFocus"/>
+					<TextBlock Margin="2,0,2,0"  Text="HeaderMaxHeight" DockPanel.Dock="Top" Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" ToolTip="Set the Maximum height for a Header"/>
+					<TextBox Margin="2,0,2,0" Width="50" Grid.Row="3" Grid.Column="0" Text="{Binding ElementName=tabControl, Path=TabItemMinHeight, Mode=TwoWay}" GotFocus="TextBox_GotFocus"/>
+					<TextBlock Margin="2,0,2,0"  Text="HeaderMinHeight" DockPanel.Dock="Top" Grid.Row="3" Grid.Column="1" VerticalAlignment="Center" ToolTip="Set the Minimum height for a Header"/>
+				</Grid>
+
+				<StackPanel Grid.Column="2"  Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+					<TextBlock Text="TabStripPlacement"/>
+					<ListBox x:Name="listBox" ItemsSource="{Binding Source={StaticResource enum}}" IsSynchronizedWithCurrentItem="True" SelectedIndex="1"/>
+				</StackPanel>
+
+			</Grid>
+		</Grid>
+    </DockPanel>
+</Window>

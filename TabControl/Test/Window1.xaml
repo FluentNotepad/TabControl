@@ -1,0 +1,9 @@
+﻿<Window x:Class="Test.Window1"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="Select Window" SizeToContent="WidthAndHeight" WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize">
+    <StackPanel Margin="10">
+		<Button Content="TabControl Using the Items property" Click="Items_Click" Margin="5" />
+		<Button Content="TabControl Using the ItemsSource property" Click="ItemsSource_Click" Margin="5"/>
+	</StackPanel>
+</Window>
